@@ -1,5 +1,4 @@
 <?php
-
 /*
   Plugin Name: Post Admin Word Count
   Plugin URI: http://www.jonbishop.com/downloads/wordpress-plugins/post-admin-word-count/
@@ -24,17 +23,13 @@ class PostAdminWordCount {
         }
     }
 
-    //=============================================
     // Add new columns to action post type
-    //=============================================
     function pwc_columns($columns) {
         $columns["post_word_count"] = "Word Count";
         return $columns;
     }
 
-    //=============================================
     // Add data to new columns of action post type
-    //=============================================
     function pwc_column($column) {
         global $post, $pwc_last;
         if ("post_word_count" == $column) {
@@ -44,10 +39,8 @@ class PostAdminWordCount {
         }
     }
 
-    //=============================================
     // Queries to run when sorting
     // new columns of action post type
-    //=============================================
     function pwc_column_orderby($orderby, $wp_query) {
         global $wpdb;
 
@@ -57,9 +50,7 @@ class PostAdminWordCount {
         return $orderby;
     }
 
-    //=============================================
     // Make new columns to action post type sortable
-    //=============================================
     function pwc_column_register_sortable($columns) {
         $columns['post_word_count'] = 'post_word_count';
         return $columns;
