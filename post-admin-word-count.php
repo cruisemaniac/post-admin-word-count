@@ -2,7 +2,7 @@
 
 /*
   Plugin Name: Post Admin Word Count
-  Plugin URI: http://www.jonbishop.com/downloads/wordpress-plugins/post-word-count/
+  Plugin URI: http://www.jonbishop.com/downloads/wordpress-plugins/post-admin-word-count/
   Description: Adds a sortable column to the admin's post manager, displaying the word count for each post.
   Version: 1.2
   Author: Jon Bishop
