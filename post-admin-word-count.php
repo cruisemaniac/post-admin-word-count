@@ -40,14 +40,6 @@ class PostAdminWordCount {
         if ("post_word_count" == $column) {
             // Grab a fresh word count
             $word_count = str_word_count($post->post_content);
-
-            // If post has been updated since last check
-            if ($post->post_modified > $pwc_last) {
-                $saved_word_count = get_post_meta($post->ID, '_post_word_count', true);
-                if ($saved_word_count != $word_count || $saved_word_count == "") {
-                    update_post_meta($post->ID, '_post_word_count', $word_count, $saved_word_count);
-                }
-            }
             echo $word_count;
         }
     }
@@ -58,8 +50,6 @@ class PostAdminWordCount {
     //=============================================
     function pwc_column_orderby($orderby, $wp_query) {
         global $wpdb;
-
-        $wp_query->query = wp_parse_args($wp_query->query);
 
         if ('post_word_count' == @$wp_query->query['orderby'])
             $orderby = "(SELECT CAST(meta_value as decimal) FROM $wpdb->postmeta WHERE post_id = $wpdb->posts.ID AND meta_key = '_post_word_count') " . $wp_query->get('order');
@@ -76,10 +66,32 @@ class PostAdminWordCount {
     }
     
     function pwc_get_date(){
-        global $pwc_last;
+        global $post, $pwc_last;
         // Check last updated
-        if (!isset($pwc_last) || $pwc_last == '')
-            $pwc_last = get_option('pwc_last_checked');
+        $pwc_last = get_option('pwc_last_checked');
+
+		if ( $post && $post->post_type ){
+			$args = array(
+				'post_type' => $post->post_type,
+				'posts_per_page' => -1
+				);
+
+			$post_list = new WP_Query($args);
+			if ( $post_list->have_posts() ) : while ( $post_list->have_posts() ) : $post_list->the_post(); 
+				// Grab a fresh word count
+	            $word_count = str_word_count($post->post_content);
+
+	            // If post has been updated since last check
+	            if ($post->post_modified > $pwc_last || $pwc_last == "") {
+	                $saved_word_count = get_post_meta($post->ID, '_post_word_count', true);
+	                if ($saved_word_count != $word_count || $saved_word_count == "") {
+	                    update_post_meta($post->ID, '_post_word_count', $word_count, $saved_word_count);
+	                }
+	            }
+			endwhile; 
+			endif;
+			wp_reset_query();
+		}
     }
     
     function pwc_update_date(){
