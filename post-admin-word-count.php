@@ -17,6 +17,12 @@ class PostAdminWordCount {
             add_filter('posts_orderby', array(&$this, 'pwc_column_orderby'), 10, 2);
             add_filter("manage_posts_columns", array(&$this, "pwc_columns"));
             add_action("manage_posts_custom_column", array(&$this, "pwc_column"));
+
+			add_filter('manage_edit-page_sortable_columns', array(&$this, 'pwc_column_register_sortable'));
+            add_filter('pages_orderby', array(&$this, 'pwc_column_orderby'), 10, 2);
+            add_filter("manage_pages_columns", array(&$this, "pwc_columns"));
+            add_action("manage_pages_custom_column", array(&$this, "pwc_column"));            
+
             add_action("admin_footer-edit.php",array(&$this, "pwc_update_date"));
             add_action("admin_head-edit.php",array(&$this, "pwc_get_date"));
             
@@ -76,6 +82,11 @@ class PostAdminWordCount {
 				
 				// Grab a fresh word count
 	            $word_count = str_word_count($post->post_content);
+
+	            //update if no entry in meta
+	            if(get_post_meta($post->ID, '_post_word_count', true) == '') {
+	            	update_post_meta($post->ID, '_post_word_count', $word_count);
+				}
 
 	            // If post has been updated since last check
 	            if ($post->post_modified > $pwc_last || $pwc_last == "") {
