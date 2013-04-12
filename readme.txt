@@ -25,6 +25,10 @@ I often create new drafts in WordPress every time I get an idea to blog. The pro
 
 == Changelog ==
 
+= 1.2.1 =
+* added post meta creation in case it does not exist
+* added word count views and sorting for post_type=page
+ 
 = 1.2 =
 * Process post meta before display
 * Upload screenshot
